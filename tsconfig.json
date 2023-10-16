@@ -1,0 +1,46 @@
+{
+    "compilerOptions": {
+        "baseUrl": "./",
+        "target": "esnext",
+        "module": "esnext",
+        "strict": true,
+        "jsx": "preserve",
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "sourceMap": true,
+        "skipLibCheck": true,
+        "importHelpers": true,
+        "allowSyntheticDefaultImports": true,
+        "useDefineForClassFields": true,
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+		"isCustomElement": true,
+        "lib": [
+            "esnext",
+            "dom"
+        ],
+        "types": [
+            "@dcloudio/types",
+            "node",
+            "vite/client",
+            "mini-types/types",
+            "miniprogram-api-typings"
+        ],
+        // 防止不识别 "@/..."
+        "paths": {
+            "@/*": ["src/*"]
+        }
+    },
+    "include": [
+        "src/**/*.ts",
+        "src/**/*.d.ts",
+        "src/**/*.tsx",
+        "src/**/*.vue",
+        "node_modules/@vue/runtime-core/dist/runtime-core.d.ts"
+    ],
+    "exclude": [
+        "node_modules",
+        "unpackage",
+        "dist"
+    ]
+}
