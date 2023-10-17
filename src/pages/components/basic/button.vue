@@ -7,7 +7,9 @@
  * @Description: 描述
 -->
 <template>
-    <c-page>
+    <ipink-page>
+        <ipink-navigation-bar :title="$t('component.basic.button') + ' (开发中...)'" />
+        {{ "点击效果暂未开发" }}
         <view class="type flex" data-label="Button`s type">
             <ipink-button type="default">default</ipink-button>
             <ipink-button type="primary">primary</ipink-button>
@@ -78,9 +80,9 @@
             <ipink-button type="primary" @click="loading=!loading">{{loading ? "停止" : "开始"}}</ipink-button>
         </view>
         <view class="animation flex" data-label="Button`s Animation">
-            <ipink-button primary size="300,160" animation="ripple">Ripple - 水波纹</ipink-button>
+            <ipink-button primary size="300,160" animation="ripple">Ripple - 水波纹 (开发中...)</ipink-button>
         </view>
-    </c-page>
+    </ipink-page>
 </template>
 
 <script setup lang="ts" scoped>

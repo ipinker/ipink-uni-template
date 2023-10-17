@@ -65,10 +65,9 @@
     import { useTheme } from "@/common/hooks/useTheme";
 
     const { theme } = useTheme();
-    const navigateBgColor = computed(() => theme.value?.colorBgLayout);
+    const navigateBgColor = computed(() => theme.value?.colorBgContainer);
     const navigateColor = computed(() => theme.value?.colorTextBase);
     const shadowColor = computed(() => theme.value?.colorShadowBase);
-
     const props = defineProps({
         type: { // color  image  custom
             type: String,
@@ -157,7 +156,6 @@
             const _info =  wx.getMenuButtonBoundingClientRect() || {};
             paddingRight = "" + (instance?.$system?.safeArea.width - _info.left);
             // #endif
-
             paddingRight = paddingRight + 10 + 'px';
         } catch (e) {
             console.log(e)
@@ -185,7 +183,7 @@
     .pink-navigation {
         position: fixed;
         top: 0; left: 0; z-index: 300;
-        width: 750rpx;
+        width: 100vw;
 		box-sizing: border-box;
         .pink-statusbar {
 			width: 100%;

@@ -12,7 +12,7 @@ export function createApp() {
     app.use(I18n);
 	// 防止其他.start
     try {
-        app.config.globalProperties.$tr = I18n.global.t;
+        app.config.globalProperties.$t = I18n.global.t;
         app.config.globalProperties.$system = uni.getSystemInfoSync();
     } catch (e) {
         console.log("uni.getSystemInfoSyn.error : " + e);

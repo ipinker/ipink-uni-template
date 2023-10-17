@@ -7,29 +7,28 @@
  * @Description: 描述
 -->
 <template>
-    <pink-page>
-        <ipink-navigation-bar :title="$tr('name')" />
+    <ipink-page>
+        <ipink-navigation-bar :title="$t('name')" />
 
         <view v-for="(item,index) in Components" :key="index">
-            <view class="i-title"> {{ $tr('component.basic.name') }} </view>
+            <view class="i-title"> {{ $t(item.title) }} </view>
             <view class="i-card i-link" :style="[{background: bgColor}]">
                 <view class="i-link-item ActiveGray"
                     v-for="(child, childIndex) in item.components" :key="'-' + childIndex"
                     @click="goDetail(child, item)"
                 >
-                    <view class="i-link-item-label" :style="[{color: fontColor}]">{{ $tr(child.title) }}</view>
+                    <view class="i-link-item-label" :style="[{color: fontColor}]">{{ $t(child.title) }}</view>
                     <view class="i-link-item-icon iconfont icon-xiangyou"></view>
                 </view>
             </view>
         </view>
-    </pink-page>
+    </ipink-page>
 </template>
 
 <script setup lang="ts" scoped>
 import {useThemeStore} from "@/store/theme"
 import {computed, ref} from "vue";
 import Components, {ComponentItem, ComponentsItem} from "../../common/config/components";
-import PinkNavigationBar from "@/components/ipink-navigation-bar/index.vue";
 
 const useStore = useThemeStore();
 const themeColor = computed(() => useStore.theme?.colorPrimary);

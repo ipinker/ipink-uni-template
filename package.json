@@ -1,6 +1,6 @@
 {
-    "name": "uni-preset-vue",
-    "version": "0.0.0",
+    "name": "ipink-vue3-template",
+    "version": "1.0.1",
     "repository": {
         "type": "git",
         "url": "https://github.com/ipinker/ipink-template.git"
@@ -58,7 +58,7 @@
         "@dcloudio/uni-mp-toutiao": "3.0.0-3080720230703001",
         "@dcloudio/uni-mp-weixin": "3.0.0-3080720230703001",
         "@dcloudio/uni-quickapp-webview": "3.0.0-3080720230703001",
-        "ipink-theme": "^0.0.10",
+        "ipink-theme": "^0.0.16",
         "pinia": "2.0.32",
         "vue-i18n": "^9.5.0"
     },

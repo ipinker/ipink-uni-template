@@ -1,6 +1,7 @@
 /// <reference types="vite/client" />
 import { ComponentCustomProperties } from "@vue/runtime-core";
 import type { VueI18nTranslation, Messages, Locales } from "vue-i18n";
+import { UniNamespace as UniApp } from "@dcloudio/types"
 
 declare module '*.vue' {
   import { DefineComponent } from 'vue'
@@ -11,8 +12,8 @@ declare module '*.vue' {
 
 declare module "@vue/runtime-core" {
   interface ComponentCustomProperties {
-    $system: proxy;
-    $tr: VueI18nTranslation<Messages, Locales>;
+    $system: UniApp.GetSystemInfoResult;
+    $t: any;
   }
 }
 
