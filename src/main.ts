@@ -3,6 +3,7 @@ import App from "./App.vue";
 import "./static/icon/iconfont.css";
 import store, { Pinia } from "./store";
 import I18n from "@/common/locale/index"
+import {addInterceptorForRequest} from "@/common/request";
 export function createApp() {
     const app = createSSRApp(App);
     app.use(store);
@@ -17,6 +18,7 @@ export function createApp() {
     } catch (e) {
         console.log("uni.getSystemInfoSyn.error : " + e);
     }
+    addInterceptorForRequest();
 	// to do something...
 
 

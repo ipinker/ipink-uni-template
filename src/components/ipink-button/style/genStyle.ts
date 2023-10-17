@@ -1,10 +1,10 @@
 import {
     Size, SIZES,
     Radius, RADIUS, Animation, ANIMATIONS
-} from "@/common/utils/css/constant";
+} from "@/common/css/constant";
 import type { ExtractPropTypes } from 'vue';
 import type { ButtonPropsType } from "../button";
-import {getRadius, RadiusStyle, getSize, SizeStyle} from "@/common/utils/css/style";
+import {getRadius, RadiusStyle, getSize, SizeStyle} from "@/common/css/style";
 /**
  * @description 根据按钮的类型 <type> 生成指定的 class 集合
  */
