@@ -57,7 +57,8 @@ page,
     padding: 0 20rpx;
     word-break: break-all;
     overflow: hidden;
-    &:hover {
+    &:hover,
+    &:active {
         width: 160rpx;
         border-radius: 10rpx;
     }

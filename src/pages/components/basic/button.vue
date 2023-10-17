@@ -7,82 +7,82 @@
  * @Description: 描述
 -->
 <template>
-    <ipink-page>
-        <ipink-navigation-bar :title="$t('component.basic.button') + ' (开发中...)'" />
+    <i-page>
+        <i-navigation-bar :title="$tr('component.basic.button') + ' (开发中...)'" useBack/>
         {{ "点击效果暂未开发" }}
         <view class="type flex" data-label="Button`s type">
-            <ipink-button type="default">default</ipink-button>
-            <ipink-button type="primary">primary</ipink-button>
-            <ipink-button type="success">success</ipink-button>
-            <ipink-button type="danger">danger</ipink-button>
-            <ipink-button type="warning">warning</ipink-button>
-            <ipink-button type="info">info</ipink-button>
+            <i-button type="default">default</i-button>
+            <i-button type="primary">primary</i-button>
+            <i-button type="success">success</i-button>
+            <i-button type="danger">danger</i-button>
+            <i-button type="warning">warning</i-button>
+            <i-button type="info">info</i-button>
         </view>
         <view class="type plain flex" data-label="Button`s plain">
-            <ipink-button type="default" plain>default</ipink-button>
-            <ipink-button type="primary" plain>primary</ipink-button>
-            <ipink-button type="success" plain>success</ipink-button>
-            <ipink-button type="danger" plain>danger</ipink-button>
-            <ipink-button type="warning" plain>warning</ipink-button>
-            <ipink-button type="info" plain>info</ipink-button>
+            <i-button type="default" plain>default</i-button>
+            <i-button type="primary" plain>primary</i-button>
+            <i-button type="success" plain>success</i-button>
+            <i-button type="danger" plain>danger</i-button>
+            <i-button type="warning" plain>warning</i-button>
+            <i-button type="info" plain>info</i-button>
         </view>
         <view class="disabled flex" data-label="Button`s disabled">
-            <ipink-button type="disabled">disabled</ipink-button>
-            <ipink-button type="text" disabled>disabled</ipink-button>
+            <i-button type="disabled">disabled</i-button>
+            <i-button type="text" disabled>disabled</i-button>
         </view>
         <view class="size flex" data-label="Button`s size">
-            <ipink-button size="small">small</ipink-button>
-            <ipink-button size="normal">normal</ipink-button>
-            <ipink-button size="big">big</ipink-button>
-            <ipink-button size="120,50">120,50</ipink-button>
-            <ipink-button size="500,80">500,80-自定义size会自动化隐藏</ipink-button>
+            <i-button size="small">small</i-button>
+            <i-button size="normal">normal</i-button>
+            <i-button size="big">big</i-button>
+            <i-button size="120,50">120,50</i-button>
+            <i-button size="500,80">500,80-自定义size会自动化隐藏</i-button>
         </view>
         <view class="round flex" data-label="Button`s round">
-            <ipink-button icon="icon-sousuo" round></ipink-button>
-            <ipink-button type="primary" icon="icon-sousuo" round></ipink-button>
-            <ipink-button type="primary" plain icon="icon-sousuo" round></ipink-button>
-            <ipink-button type="success" size="60" round>2</ipink-button>
+            <i-button icon="icon-sousuo" round></i-button>
+            <i-button type="primary" icon="icon-sousuo" round></i-button>
+            <i-button type="primary" plain icon="icon-sousuo" round></i-button>
+            <i-button type="success" size="60" round>2</i-button>
         </view>
         <view class="icon flex" data-label="Button`s icon">
-            <ipink-button type="primary" icon="icon-sousuo">搜索</ipink-button>
-            <ipink-button type="primary" plain icon="icon-sousuo">搜索</ipink-button>
-            <ipink-button type="primary" icon="icon-shenghuojiaofei">缴费</ipink-button>
-            <ipink-button type="primary" plain icon="icon-shenghuojiaofei">缴费</ipink-button>
+            <i-button type="primary" icon="icon-sousuo">搜索</i-button>
+            <i-button type="primary" plain icon="icon-sousuo">搜索</i-button>
+            <i-button type="primary" icon="icon-shenghuojiaofei">缴费</i-button>
+            <i-button type="primary" plain icon="icon-shenghuojiaofei">缴费</i-button>
         </view>
         <view class="func flex" data-label="Button`s text">
-            <ipink-button type="text">普通文本</ipink-button>
-            <ipink-button type="link">链接文本</ipink-button>
-            <ipink-button type="text" icon="icon-sousuo">普通文本</ipink-button>
-            <ipink-button type="link" plain icon="icon-sousuo">链接文本</ipink-button>
+            <i-button type="text">普通文本</i-button>
+            <i-button type="link">链接文本</i-button>
+            <i-button type="text" icon="icon-sousuo">普通文本</i-button>
+            <i-button type="link" plain icon="icon-sousuo">链接文本</i-button>
         </view>
 
         <view class="color flex" data-label="Button`s color">
-            <ipink-button color="red">Red Text</ipink-button>
-            <ipink-button bg="red">Red Bg</ipink-button>
-            <ipink-button bg="red" color="white">Red Bg White Text</ipink-button>
-            <ipink-button bg="red" plain>Red Bg And Plain</ipink-button>
+            <i-button color="red">Red Text</i-button>
+            <i-button bg="red">Red Bg</i-button>
+            <i-button bg="red" color="white">Red Bg White Text</i-button>
+            <i-button bg="red" plain>Red Bg And Plain</i-button>
         </view>
 
         <view class="radius flex" data-label="Button`s radius">
-            <ipink-button color="red" radius="default">Radius</ipink-button>
-            <ipink-button color="red" radius="xs">Radius-XS</ipink-button>
-            <ipink-button color="red" radius="sm">Radius-SM</ipink-button>
-            <ipink-button color="red" radius="lg">Radius-LG</ipink-button>
-            <ipink-button color="red" radius="20">Radius-20</ipink-button>
+            <i-button color="red" radius="default">Radius</i-button>
+            <i-button color="red" radius="xs">Radius-XS</i-button>
+            <i-button color="red" radius="sm">Radius-SM</i-button>
+            <i-button color="red" radius="lg">Radius-LG</i-button>
+            <i-button color="red" radius="20">Radius-20</i-button>
         </view>
         <view class="block flex" data-label="Button`s block">
-            <ipink-button block>Block - 宽度撑满父元素</ipink-button>
+            <i-button block>Block - 宽度撑满父元素</i-button>
         </view>
         <view class="loading flex" data-label="Button`s loading">
-            <ipink-button loading>Loading</ipink-button>
-            <ipink-button type="primary" :loading="loading" @click="getLoadingClick">Loading</ipink-button>
-            <ipink-button type="primary" :loading="loading" @click="getLoadingClick" icon="icon-sousuo">Loading</ipink-button>
-            <ipink-button type="primary" @click="loading=!loading">{{loading ? "停止" : "开始"}}</ipink-button>
+            <i-button loading>Loading</i-button>
+            <i-button type="primary" :loading="loading" @click="getLoadingClick">Loading</i-button>
+            <i-button type="primary" :loading="loading" @click="getLoadingClick" icon="icon-sousuo">Loading</i-button>
+            <i-button type="primary" @click="loading=!loading">{{loading ? "停止" : "开始"}}</i-button>
         </view>
         <view class="animation flex" data-label="Button`s Animation">
-            <ipink-button primary size="300,160" animation="ripple">Ripple - 水波纹 (开发中...)</ipink-button>
+            <i-button primary size="300,160" animation="ripple">Ripple - 水波纹 (开发中...)</i-button>
         </view>
-    </ipink-page>
+    </i-page>
 </template>
 
 <script setup lang="ts" scoped>

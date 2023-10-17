@@ -1,6 +1,6 @@
 <template>
-    <ipink-page class="page">
-        <ipink-navigation-bar :title="$t('component.theme.colorful')" />
+    <i-page class="page">
+        <i-navigation-bar :title="$tr('component.theme.colorful')" useBack/>
         <view class="i-card">
             <view class="func-theme-container">
                 <view class="func-theme" v-for="(item,index) in funcColors" :key="index" :id="item.default">
@@ -55,7 +55,7 @@
                 </view>
             </view>
         </view>
-    </ipink-page>
+    </i-page>
 </template>
 
 <script lang="ts" setup>

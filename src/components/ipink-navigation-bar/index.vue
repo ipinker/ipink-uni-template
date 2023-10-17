@@ -23,7 +23,7 @@
 				<block v-else>
 					<view class="pink-navigation_c_c_c">
 						<view class="pink-nav_c_box">
-						    <view class="pink-nav_back active-light" v-if="isBack" @click="handleBack">
+						    <view class="pink-nav_back active-light" v-if="useBack" @click="handleBack">
 						        <text class="pink-nav_back_icon iconfont" :class="backIcon" v-if="backIcon"></text>
 						        <image class="pink-nav_back_icon" :src="backImage" v-if="!backIcon"/>
 								{{backTxt}}
@@ -109,7 +109,7 @@
             type: String,
             default: ""
         },
-        isBack: {
+        useBack: {
             type: Boolean,
             default: false
         },
@@ -148,7 +148,6 @@
 
     onMounted(() => {
         try {
-            console.log(instance?.$system)
             statusBarHeight = instance?.$system?.statusBarHeight;
             contentHeight = uni.upx2px(+ props.height);
             navHeight = contentHeight + statusBarHeight;

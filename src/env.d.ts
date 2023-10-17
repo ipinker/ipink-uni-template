@@ -13,7 +13,7 @@ declare module '*.vue' {
 declare module "@vue/runtime-core" {
   interface ComponentCustomProperties {
     $system: UniApp.GetSystemInfoResult;
-    $t: any;
+    $tr: any;
   }
 }
 
