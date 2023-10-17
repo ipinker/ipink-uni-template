@@ -1,5 +1,5 @@
 <template>
-    <view class="pink-navigation_relative"
+    <view class="pink-navigation_relative"  ref="_ref"
 		:style="[{height: navHeight + 'px'}]"
 	>
         <view class="pink-navigation" :style="[{ height: navHeight+'px' }]">
@@ -53,10 +53,40 @@
     </view>
 </template>
 
-<script>
+<script lang="ts">
     export default {
         name: "pink-navigation-bar",
         props: {
+        },
+        data() {
+            return {
+                SYSTEM_INFO: {},
+
+            }
+        },
+        async created() {
+
+        },
+        methods: {
+			handleBack() {
+				if(this.canBack){
+					this.canBack = false;
+					uni.navigateBack();
+					setTimeout(() => {
+						this.canBack = true;
+					}, 300);
+				}
+			}
+        }
+    }
+</script>
+
+
+<script setup lang="ts">
+import {onMounted, Ref, ref, getCurrentInstance} from "vue";
+
+
+    const props = defineProps({
             type: { // color  image  custom
                 type: String,
                 default: "color"
@@ -114,45 +144,38 @@
                 type: String,
                 default: ""
 			}
-        },
-        data() {
-            return {
-                SYSTEM_INFO: {},
-                statusBarHeight: 0,
-                navHeight: 50,
-				contentHeight: uni.upx2px(this.height),
-                bgImg: this.bgImage,    // 背景图
-                showImage: false,
-				paddingRight: 0,
-				canBack: true
-            }
-        },
-        async created() {
-            try {
-                this.statusBarHeight = this.$system.statusBarHeight;
-				this.contentHeight = uni.upx2px(this.height);
-                this.navHeight = this.contentHeight + this.statusBarHeight;
-				// #ifdef MP
-				const _info =  wx.getMenuButtonBoundingClientRect() || {};
-				this.paddingRight = this.$SYSTEM_INFO.safeArea.width - _info.left;
-				// #endif
-				this.paddingRight = this.paddingRight + 10 + 'px';
-            } catch (e) {
-                console.log(e)
-            }
-        },
-        methods: {
-			handleBack() {
-				if(this.canBack){
-					this.canBack = false;
-					uni.navigateBack();
-					setTimeout(() => {
-						this.canBack = true;
-					}, 300);
-				}
-			}
+    });
+
+
+    const _ref: Ref = ref(null);
+    let statusBarHeight: number = 0,
+    navHeight: number = 50,
+    contentHeight: number = uni.upx2px(+ props.height),
+    bgImg: string = props.bgImage,    // 背景图
+    showImage: boolean = false,
+    paddingRight: number = 0,
+    canBack: boolean = true;
+    const instance = getCurrentInstance();
+    onMounted(() => {
+        try {
+            statusBarHeight = instance?.proxy?.$system?.statusBarHeight;
+            contentHeight = uni.upx2px(+ props.height);
+            navHeight = contentHeight + statusBarHeight;
+            // #ifdef MP
+            const _info =  wx.getMenuButtonBoundingClientRect() || {};
+            paddingRight = instance?.proxy?.$system?.safeArea.width - _info.left;
+            // #endif
+
+            paddingRight = paddingRight + 10 + 'px';
+        } catch (e) {
+            console.log(e)
         }
-    }
+    });
+
+
+    defineExpose({
+        _ref: _ref
+    });
 </script>
 
 <style lang="scss" scpoed>

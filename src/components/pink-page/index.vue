@@ -1,7 +1,6 @@
 <template>
     <view class="PageContainer">
         <slot />
-        {{currentLang}}
         <view class="i-theme-change" @click="changeTheme"/>
         <view class="i-theme-change i-lang-change" @click="changeLocale"/>
     </view>
@@ -11,20 +10,15 @@
 
 import { useThemeStore } from "@/store/theme";
 import { computed } from "vue";
-import { useI18n } from 'vue-i18n'
-const { locale } = useI18n();
-
+import { useLocale } from "@/common/hooks/useLocale";
+const { changeLocale } = useLocale();
 const useStore = useThemeStore();
 
 const pageColor = computed(() => useStore.theme?.colorBgLayout);
 
 const themeMaskColor = computed(() => useStore.theme?.colorTextSecondary);
 console.log(useStore.themeList)
-const changeLocale = (lang: string) => {
-    locale.value = locale.value == "en" ? "cn" : "en";
-    // 做下关于语言的本地缓存持久化
-    // to do something ...
-}
+
 
 const changeTheme = () => {
     const id = useStore.id;

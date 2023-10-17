@@ -8,7 +8,7 @@
 -->
 <template>
     <pink-page>
-        <pink-navigation-bar :title="$t('name')" />
+        <pink-navigation-bar :title="t('name')" />
 
         <view v-for="(item,index) in Components" :key="index">
             <view class="i-title"> 基础组件 </view>
@@ -30,6 +30,8 @@ import {useThemeStore} from "@/store/theme"
 import {computed, ref} from "vue";
 import Components, {ComponentItem, ComponentsItem} from "../../common/config/components";
 import PinkNavigationBar from "../../components/pink-navigation-bar/index.vue";
+import { useLocale } from "@/common/hooks/useLocale";
+const { t } = useLocale();
 
 const useStore = useThemeStore();
 const themeColor = computed(() => useStore.theme?.colorPrimary);
