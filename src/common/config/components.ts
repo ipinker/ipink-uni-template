@@ -1,3 +1,4 @@
+
 export type ComponentItem = {
     component: string,
     title: string,
@@ -8,15 +9,22 @@ export type ComponentsItem = {
     title: string,
 }
 export const colorComponents: ComponentItem[] = [
-    { component: "", title: "色彩", path: "/pages/components/theme/theme" }
+    { component: "", title: 'component.theme.colorful', path: "/pages/components/theme/colorful" },
 ];
 
+export const basicComponents: ComponentItem[] = [
+    { component: "Button", title: "component.basic.button", path: "/pages/components/basic/button" },
+];
 
 
 const componentsCollection: ComponentsItem[] = [
     {
-        title: "主题",
+        title: "component.theme.name",
         components: colorComponents
+    },
+    {
+        title: "component.basic.name",
+        components: basicComponents
     }
 ];
 

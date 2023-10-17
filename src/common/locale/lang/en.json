@@ -1,6 +1,14 @@
 {
 	"lang": "en",
     "name": "Fresh Accounting",
-	"common": {
+	"component": {
+        "theme": {
+            "name": "Theme",
+            "colorful": "Colorful"
+        },
+        "basic": {
+            "name" : "Basic Components",
+            "button": "Button"
+        }
     }
 }

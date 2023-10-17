@@ -1,0 +1,11 @@
+.IButton,
+button.IButton,
+.IButton::after,
+button::after,
+uni-button::after {
+    line-height: 1.6;
+    padding: 0 10px;
+    cursor: pointer;
+    border-radius: 0;
+    border: none;
+}

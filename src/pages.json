@@ -2,7 +2,7 @@
 	"easycom": {
 		"autoscan": true,
 		  "custom": {
-		   "^pink-(.*)": "@/components/pink-$1/index.vue" // 匹配components目录内的vue文件
+		   "^ipink-(.*)": "@/components/ipink-$1/index.vue" // 匹配components目录内的vue文件
 		  }
 	},
     "pages": [
@@ -14,9 +14,16 @@
             }
         },
         {
-            "path": "pages/components/theme/theme",
+            "path": "pages/components/theme/colorful",
             "style": {
-                "navigationBarTitleText": "主题",
+                "navigationBarTitleText": "主题色彩",
+                "enablePullDownRefresh": true
+            }
+        },
+        {
+            "path": "pages/components/basic/button",
+            "style": {
+                "navigationBarTitleText": "按钮",
                 "enablePullDownRefresh": true
             }
         }

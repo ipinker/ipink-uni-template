@@ -1,7 +1,14 @@
 {
 	"lang": "cn",
     "name": "清新记账",
-	"common": {
-
+	"component": {
+        "theme": {
+            "name": "主题",
+            "colorful": "色彩"
+        },
+        "basic": {
+            "name" : "基础组件",
+            "button": "按钮"
+        }
     }
 }

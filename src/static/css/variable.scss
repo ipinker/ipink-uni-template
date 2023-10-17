@@ -1,0 +1,80 @@
+
+@mixin font($size: 30rpx,  $color: #333, $weight: 400, $space: 0) {
+	font-size: $size;
+	font-weight: $weight;
+	color: $color;
+	font-family: $pink-font-family;
+	letter-spacing: $space;
+}
+@mixin position($top, $right, $bottom, $left, $position: fixed, $index: 1) {
+	position: $position;
+	z-index: $index;
+	@if $right {
+		right: $right;
+	}
+	@if $left {
+		left: $left;
+	}
+	@if $bottom {
+		bottom: $bottom;
+	}
+	@if $top {
+		top: $top;
+	}
+}
+@mixin flex($direction: row, $justify: flex-start, $align: flex-start) {
+	display: flex;
+	flex-direction: $direction;
+	justify-content: $justify;
+	align-items: $align;
+}
+@mixin center($direction: row,) {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: $direction;
+}
+@mixin vercenter($direction: row) {
+	display: flex;
+	align-items: center;
+	flex-direction: $direction;
+	justify-content: flex-start;
+}
+
+@mixin horcenter($direction: row) {
+	display: flex;
+	justify-content: center;
+	align-items: flex-start;
+	flex-direction: $direction;
+}
+
+@mixin abscenter($index: 1) {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	z-index: $index;
+}
+
+@mixin ellipsis1 () {
+	overflow: hidden;
+	text-overflow:ellipsis;
+	white-space: nowrap;
+}
+@mixin ellipsis($line: 3) {
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: $line;
+	overflow: hidden;
+}
+
+
+@mixin flex ($isBlock: true, $dir: row) {
+    display: if($isBlock, flex, inline-flex);
+    flex-direction: $dir;
+}
+@mixin flexCenter ($isBlock: true, $dir: row) {
+    @include flex($isBlock, $dir);
+    justify-content: center;
+    align-content: center;
+}

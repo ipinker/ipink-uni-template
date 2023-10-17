@@ -72,7 +72,7 @@
     "h5" : {
         "router" : {
             "mode" : "hash",
-            "base" : "/component/"
+            "base" : "/app/"
         }
     }
 }

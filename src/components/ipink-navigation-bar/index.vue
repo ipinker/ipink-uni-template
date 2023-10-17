@@ -14,7 +14,7 @@
                 <slot name="nav"></slot>
             </view>
             <view class="pink-navigation_c"
-				:style="[{  height: contentHeight + 'px' }, { background: gradientType ? gradientType+'-gradient('+gradientValue+')' : bgColor }]"
+				:style="navigateBodyStyle"
 				v-else
 			>
 				<block v-if="type == 'image'">
@@ -55,96 +55,80 @@
 
 <script lang="ts">
     export default {
-        name: "pink-navigation-bar",
-        props: {
-        },
-        data() {
-            return {
-                SYSTEM_INFO: {},
-
-            }
-        },
-        async created() {
-
-        },
-        methods: {
-			handleBack() {
-				if(this.canBack){
-					this.canBack = false;
-					uni.navigateBack();
-					setTimeout(() => {
-						this.canBack = true;
-					}, 300);
-				}
-			}
-        }
+        name: "pink-navigation-bar"
     }
 </script>
 
 
 <script setup lang="ts">
-import {onMounted, Ref, ref, getCurrentInstance} from "vue";
+    import {onMounted, Ref, ref, getCurrentInstance, computed} from "vue";
+    import { useTheme } from "@/common/hooks/useTheme";
 
+    const { theme } = useTheme();
+    const navigateBgColor = computed(() => theme.value?.colorBgLayout);
+    const navigateColor = computed(() => theme.value?.colorTextBase);
+    const shadowColor = computed(() => theme.value?.colorShadowBase);
 
     const props = defineProps({
-            type: { // color  image  custom
-                type: String,
-                default: "color"
-            },
-            height: {  // 高度
-                type: [Number , String],
-                default: 100
-            },
-            title: {
-                type: String,
-                default: ""
-            },
-            titleAlign: { // 标题方向 center | start | end
-                type: String,
-                default: "center"
-            },
-			color: { // 字色 rgb #H ColorName
-                type: String,
-                default: ""
-            },
-            bgColor: {   // 背景色
-                type: String,
-                default: "#ffffff"
-            },
-            statusColor: { // 状态条背景色, 传一个颜色值或渐变属性值 color | linear-gradient()
-                type: String,
-                default: ""
-            },
-            bgImage: {   // 背景图
-                type: String,
-                default: ""
-            },
-            gradientType: { // 渐变类型 linear | radial
-                type: String,
-                default: ""
-            },
-            gradientValue: { // 渐变值内容
-                type: String,
-                default: ""
-            },
-            isBack: {
-                type: Boolean,
-                default: false
-            },
-			backTxt: {
-                type: String,
-                default: ""
-            },
-			// 优先使用
-            backIcon: {       // 返回 按钮路径
-                type: String,
-                default: "icon-xiangzuo1"
-            },
-			backImage: {
-                type: String,
-                default: ""
-			}
+        type: { // color  image  custom
+            type: String,
+            default: "color"
+        },
+        height: {  // 高度
+            type: [Number , String],
+            default: 100
+        },
+        title: {
+            type: String,
+            default: ""
+        },
+        titleAlign: { // 标题方向 center | start | end
+            type: String,
+            default: "center"
+        },
+        color: { // 字色 rgb #H ColorName
+            type: String,
+            default: ""
+        },
+        bgColor: {   // 背景色
+            type: String,
+            default: ""
+        },
+        statusColor: { // 状态条背景色, 传一个颜色值或渐变属性值 color | linear-gradient()
+            type: String,
+            default: ""
+        },
+        bgImage: {   // 背景图
+            type: String,
+            default: ""
+        },
+        gradientType: { // 渐变类型 linear | radial
+            type: String,
+            default: ""
+        },
+        gradientValue: { // 渐变值内容
+            type: String,
+            default: ""
+        },
+        isBack: {
+            type: Boolean,
+            default: false
+        },
+        backTxt: {
+            type: String,
+            default: ""
+        },
+        // 优先使用
+        backIcon: {       // 返回 按钮路径
+            type: String,
+            default: "icon-xiangzuo1"
+        },
+        backImage: {
+            type: String,
+            default: ""
+        }
     });
+
 
 
     const _ref: Ref = ref(null);
@@ -153,17 +137,25 @@ import {onMounted, Ref, ref, getCurrentInstance} from "vue";
     contentHeight: number = uni.upx2px(+ props.height),
     bgImg: string = props.bgImage,    // 背景图
     showImage: boolean = false,
-    paddingRight: number = 0,
+    paddingRight: string = "0px",
     canBack: boolean = true;
-    const instance = getCurrentInstance();
+    const instance = getCurrentInstance()?.proxy;
+
+    const navigateBodyStyle = [
+        {  height: contentHeight + 'px' },
+        { background: props.gradientType ? props.gradientType+'-gradient('+props.gradientValue+')' : props.bgColor },
+        { color: props.color }
+    ];
+
     onMounted(() => {
         try {
-            statusBarHeight = instance?.proxy?.$system?.statusBarHeight;
+            console.log(instance?.$system)
+            statusBarHeight = instance?.$system?.statusBarHeight;
             contentHeight = uni.upx2px(+ props.height);
             navHeight = contentHeight + statusBarHeight;
             // #ifdef MP
             const _info =  wx.getMenuButtonBoundingClientRect() || {};
-            paddingRight = instance?.proxy?.$system?.safeArea.width - _info.left;
+            paddingRight = "" + (instance?.$system?.safeArea.width - _info.left);
             // #endif
 
             paddingRight = paddingRight + 10 + 'px';
@@ -172,6 +164,15 @@ import {onMounted, Ref, ref, getCurrentInstance} from "vue";
         }
     });
 
+    const handleBack = () => {
+        if(canBack){
+            canBack = false;
+            uni.navigateBack();
+            setTimeout(() => {
+                canBack = true;
+            }, 300);
+        }
+    }
 
     defineExpose({
         _ref: _ref
@@ -194,6 +195,9 @@ import {onMounted, Ref, ref, getCurrentInstance} from "vue";
             height: 100%; width: 100%;
 			max-height: 100%;
 			box-sizing: border-box;
+            box-shadow: 0 2rpx 8rpx 0 v-bind(shadowColor);
+            background-color: v-bind(navigateBgColor);
+            color: v-bind(navigateColor);
             &_c_img {
                 width: 100%; height: 100%;
             }

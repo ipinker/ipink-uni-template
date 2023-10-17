@@ -9,7 +9,7 @@
                     @click="copyColor(info.color as Color)"
                 >
                     <view>{{info.label}}</view>
-                    <view>{{theme[info.color]}}</view>
+                    <view>{{ theme[info.color] }}</view>
                 </view>
             </view>
         </view>
@@ -28,7 +28,7 @@
                         @click="copyColor(color as Color)"
                     >
                         <view class="color-label">{{color}}</view>
-                        <view class="color-value">{{theme[color]}}</view>
+                        <view class="color-value">{{ theme[color] }}</view>
                     </view>
                 </view>
             </view>
@@ -39,19 +39,20 @@
 <script lang="ts" setup>
 import {computed, ComputedRef} from "vue";
 import { ColorToken} from "ipink-theme"
-import { useThemeStore } from "@/store/theme";
-import { presetColors, funcColors } from "../../../common/config/theme";
+import { presetColors, funcColors } from "@/common/config/theme";
+import {useTheme} from "@/common/hooks/useTheme";
 
 type Color = keyof ColorToken;
 
-const useStore = useThemeStore();
+const { theme } = useTheme();
+
+const themeInfo: ComputedRef<ColorToken> = computed(() => (theme.value || {}) as ColorToken);
 
 console.log(presetColors, funcColors)
-const theme: ComputedRef<ColorToken> = computed(() => (useStore.theme || {}) as ColorToken);
-const primary = computed(() => useStore.theme?.colorPrimary)
-const genBgStyle = (color : Color ): string => `background-color: ${theme.value[color]}`;
-const genFontStyle = (color : Color ): string => `color: ${theme.value[color]}`;
-const copyColor = (color : Color): void => console.log(theme.value[color]);
+const primary = computed(() => theme.value?.colorPrimary );
+const genBgStyle = (color : Color ): string => `background-color: ${themeInfo.value[color]}`;
+const genFontStyle = (color : Color ): string => `color: ${themeInfo.value[color]}`;
+const copyColor = (color : Color): void => console.log(themeInfo.value[color]);
 </script>
 
 <style lang="scss">

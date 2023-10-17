@@ -8,16 +8,16 @@
 -->
 <template>
     <pink-page>
-        <pink-navigation-bar :title="t('name')" />
+        <ipink-navigation-bar :title="$tr('name')" />
 
         <view v-for="(item,index) in Components" :key="index">
-            <view class="i-title"> 基础组件 </view>
+            <view class="i-title"> {{ $tr('component.basic.name') }} </view>
             <view class="i-card i-link" :style="[{background: bgColor}]">
                 <view class="i-link-item ActiveGray"
                     v-for="(child, childIndex) in item.components" :key="'-' + childIndex"
                     @click="goDetail(child, item)"
                 >
-                    <view class="i-link-item-label" :style="[{color: fontColor}]">{{ child.title }}</view>
+                    <view class="i-link-item-label" :style="[{color: fontColor}]">{{ $tr(child.title) }}</view>
                     <view class="i-link-item-icon iconfont icon-xiangyou"></view>
                 </view>
             </view>
@@ -29,9 +29,7 @@
 import {useThemeStore} from "@/store/theme"
 import {computed, ref} from "vue";
 import Components, {ComponentItem, ComponentsItem} from "../../common/config/components";
-import PinkNavigationBar from "../../components/pink-navigation-bar/index.vue";
-import { useLocale } from "@/common/hooks/useLocale";
-const { t } = useLocale();
+import PinkNavigationBar from "@/components/ipink-navigation-bar/index.vue";
 
 const useStore = useThemeStore();
 const themeColor = computed(() => useStore.theme?.colorPrimary);
