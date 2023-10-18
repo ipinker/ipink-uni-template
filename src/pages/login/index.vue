@@ -1,6 +1,6 @@
 <template>
-	<pink-page class="page">
-		<pink-navigation-bar title="登录" />
+	<i-page class="page">
+		<i-navigation-bar title="登录" />
 
 		<view class="login">
 			<view class="active-light changeLoginMode" @click="mode='password'" v-if="mode != 'password'">
@@ -21,7 +21,7 @@
 				    <view class="login-item-sign" @click="changeImgCode"> <img :src="codeImg" alt=""> </view>
 				</view>
 				<view class="rememberPassword">
-					<pink-check v-model="rememberPassword" @change="rememberPasswordChange">记住密码</pink-check>
+					<i-check v-model="rememberPassword" @change="rememberPasswordChange">记住密码</i-check>
 				</view>
 			</block>
 			<block v-if="mode == 'email'">
@@ -47,14 +47,14 @@
 				</view>
 			</block>
 			<view class="agreeProcotol">
-				<pink-check v-model="agree">
+				<i-check v-model="agree">
 					我同意<text @click="goProtocol('privacy')">《隐私协议》</text
 					>与<text @click="goProtocol('server')">《服务协议》</text>
-				</pink-check>
+				</i-check>
 			</view>
 
-			<pink-space height="40"></pink-space>
-			<pink-button @click="login" classes="big primary">登录</pink-button>
+			<i-space height="40"/>
+			<i-button @click="login" type="primary">登录</i-button>
 		</view>
 
 		<view class="forget abs-bottom" @click="forgot">
@@ -92,196 +92,180 @@
 			<!-- #endif -->
 		</view>
 		<view class="login-one-key abs-bottom" v-if="showOnekeyLogin">
-			<pink-button @click="loginForOther('onekey')" classes="primary big">一键登录</pink-button>
+			<i-button @click="loginForOther('onekey')" classes="primary big">一键登录</i-button>
 		</view>
-	</pink-page>
+	</i-page>
 </template>
 
-<script>
-	import {
-		setUserForLogin,
-		getAuthCode,
-		checkCanUseOneKeyLogin ,
-		appLogin,
-		getPhoneByUniverify
-	} from "@/common/js/config/index.js";
-	import Ajax from "@/common/js/request/ajax.js";
-	import { toast, transformTransparent, getIEMI_MAC, uuid, verifyString } from "@/common/helper/util.js";
-	import { authLogin } from "@/common/js/helper/fingerPrint.js";
-	export default {
-		data() {
-			return {
-				// 密码登录
-				imgCode: "", // 输入的图形验证码
-				codeImg: "", // 图形验证码
-				password: "",
-				username: "",
-				rememberPassword: true,
-				uuid: "",// 密码登录图形验证码
+<script setup lang="ts" >
+import {computed, ComputedRef, ref, Ref} from "vue";
+import {
+    checkCanUseOneKeyLogin
+} from "@/common/utils/login";
+import R from "@/common/request";
+import { genUuid } from "@/common/utils/gen"
+import {isEmail, isPhone} from "@/common/utils/is"
+// #ifdef APP
+import { getIMEI_MAC } from "@/common/utils/get"
+// #endif
+import { toast } from "@/common/utils/toast";
+import { useUserStore } from "@/store/user";
+import { useTheme } from "@/common/hooks/useTheme";
+import {onLoad} from "@dcloudio/uni-app";
+import {IMEIType} from "@/types";
 
-				back: 0,
+const userStore = useUserStore();
+const { theme } = useTheme();
 
-				// 登录协议
-				agree: false,
+let userId: ComputedRef<string> = computed(() => userStore.userId);
+let uuid: string  = genUuid();
+let password: Ref<string> = ref("");
+let username: Ref<string> = ref("");
+let imgCode: Ref<string> = ref("");
+let codeImg: Ref<string> = ref("");
+let back: Ref<number> = ref(0);
 
-				// uniapp  APP一键登录
-				showOnekeyLogin: false,
+let rememberPassword: Ref<boolean> = ref(true);
+let agree: Ref<boolean> = ref(false); // 必须为false, 不然上架会被驳回
+let showOnekeyLogin: Ref<boolean> = ref(false); // 显示 uniapp  APP 一键登录
+let showFingerPrint: Ref<boolean> = ref(false); // 显示指纹登录
 
-				// IMEI 配合 指纹登录
-				showFingerPrint: false,
-				IMEI: "",
-				userId: "",
+let IMEI: Ref<string> = ref(""); // 用来指纹登录的设备ID
+// 登录模式
+let mode: Ref<string> = ref("password");
 
-				// 登录模式
-				mode: "password",
+// 验证码登录
+let email:Ref<string> = ref("");
+let phone:Ref<string> = ref("");
+let code:Ref<string> = ref(""); // 验证码有效期: 60 * 60 s
+let codeExpire: Ref<number> = ref( 1000 * 60 * 30);
+let isSend: Ref<number> = ref(0); // 0: 未发送, 1: 已发送, 2: 发送失败, 3: 重新发送验证码,
+let currentCodeSecond: Ref<number> = ref(0);
+let timeId: Ref<any>;
 
-				// 验证码登录
-				email: "",
-				phone: "",
-				code: "", // 验证码有效期: 60 * 60 s
-				isSend: 0, // 0: 未发送, 1: 已发送, 2: 发送失败, 3: 重新发送验证码,
-				codeExpire: 999, // 验证码有效期
-				currentCodeSecond: 0,
-				timeId: null
-			}
-		},
-		computed: {
-			sendText() {
-				let status = "发送验证码";
-				if(this.isSend == 1) status = `（${this.currentCodeSecond}s）内有效`;
-				if(this.isSend == 2) status = `重新发送`;
-				if(this.isSend == 3) status = "重新发送";
-				return status;
-			}
-		},
-		async onLoad(options) {
-			this.uuid = uuid();
-			this.changeImgCode();
-			uni.hideLoading();
-			this.back = options.back;
-			if(process.env.NODE_ENV === 'development') {
-				this.password = "124284";
-				this.username = "admin";
-				this.email = "1242849166@qq.com";
-				this.phone = "16639766677";
-				this.agree = true;
-			}
-			this.userId = uni.getStorageSync("UserId");
-			// #ifdef APP
-			const dev = await getIEMI_MAC();
-			this.IMEI = dev.IMEI || dev.deviceId;
-			let canUse = await checkCanUseOneKeyLogin().catch(err => err);
-			this.showOnekeyLogin = canUse;
-			this.showFingerPrint = this.globalConfig.fingerPrint && this.IMEI && this.userId;
-			// #endif
-			this.rememberPassword = uni.getStorageSync("IsRememberPassword") || false;
-			const account = uni.getStorageSync("MyAcountInfo");
-			if(this.rememberPassword && account){
-				this.password = account.password;
-				this.username = account.username;
-			}
+const sendText = computed(() => {
+    let status = "发送验证码";
+    if(isSend.value == 1) status = `（${currentCodeSecond.value}s）内有效`;
+    if(isSend.value == 2) status = `重新发送`;
+    if(isSend.value == 3) status = "重新发送";
+    return status;
+})
+const startComputedSecond = () => {
+    currentCodeSecond.value = codeExpire.value;
+    timeId.value = setInterval(() => {
+        currentCodeSecond.value --;
+        if(currentCodeSecond.value <= 0){
+            clearInterval(timeId.value);
+            isSend.value = 3;
+            currentCodeSecond.value = 0;
+        }
+    }, 1000)
+};
+const sendEmailCode = async (api = "SendMailCode") => {
+    if(currentCodeSecond.value > 0) return;
+    const isSms = api == "SendSMSCode";
+    clearInterval(timeId.value);
+    if(!isSms && !isEmail(email.value)) return toast("请输入正确的邮箱号码!");
+    if(isSms && !isPhone(phone.value)) return toast("请输入正确的手机号码!");
+    const res = await R[api](isSms ? {phone: phone.value} : {email: email.value});
+    if (!res.ok) isSend.value = 2;
+    if(res.ok){
+        isSend.value = 1;
+        codeExpire.value = res.data || codeExpire.value;
+        startComputedSecond();
+    }
+}
 
-		},
+const changeImgCode = async () => {
+    const res = await R["GetImgCode"]({userId: uuid});
+    console.log(res)
+    codeImg.value = res.data;
+}
+const rememberPasswordChange = (e: boolean) => uni.setStorageSync("RememberPasswordStatus", e || false)
 
-		methods: {
-			startComputedSecond() {
-				this.currentCodeSecond = this.codeExpire;
-				this.timeId = setInterval(() => {
-					this.currentCodeSecond --;
-					if(this.currentCodeSecond <= 0){
-						clearInterval(this.timeId);
-						this.isSend = 3;
-						this.currentCodeSecond = 0;
-					}
-				}, 1000)
-			},
-			async sendEmailCode(api = "SendMailCode") {
-				if(this.currentCodeSecond > 0) return;
-				const isPhone = api == "SendSMSCode";
-				clearInterval(this.timeId);
-				if(!isPhone && !verifyString(this.email,"email")) return toast("请输入正确的邮箱号码!");
-				if(isPhone && !verifyString(this.phone,"phone")) return toast("请输入正确的手机号码!");
-				const res = await this.$R[api](isPhone ? {phone: this.phone} : {email: this.email});
-				if (!res.ok) this.isSend = 2;
-				if(res.ok){
-					this.isSend = 1;
-					this.codeExpire = res.data || this.codeExpire;
-					this.startComputedSecond();
-					if(isPhone){
-						count.count ++;
-					}
-				}
-			},
-			async changeImgCode() {
-				const res = await this.$R["GetImgCode"]({userId: this.uuid});
-				this.codeImg = res.data;
-			},
-			goProtocol(type) {
-				// uni.navigateTo({
-				// 	url: "/pages/user/server?type="+type
-				// })
-			},
-			rememberPasswordChange(e) {
-                uni.setStorageSync("RememberPasswordStatus", e || false);
-			},
-			async loginForOther(type) {
-                switch (type) {
-				    // 邮箱登录
-                    case "email":
-                        this.mode = "email"
-                        break;
-				    // 短信登录
-                    case "sms":
-                        this.mode = "sms";
-                        break;
-				    // 指纹登录
-                    case "print":
-				    // 一键登录
-                    case "onekey":
-                    // 微信小程序登录
-                    case "mini":
-                    // 微信APP登录
-                    case "wx":
-                    // 微信H5
-                    case "wxh5":
-                    // QQAPP登录
-                    case "qq":
-                    case "qqh5":
-                        // #ifdef H5
-                        window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx9b244ffaa2d01031&redirect_uri=${encodeURIComponent("https://i.ipink.pink/#/pages/login/third")}&response_type=code&scope=snsapi_base&state=wx_h5_login#wechat_redirect`
-                        // #endif
-                        break;
-                    // 支付宝APP
-                    case "ali":
-                    case "apple":
-                    default:
-                        toast("暂未开放!");
-                        break;
-                }
-			},
-			forgot() {
-				uni.navigateTo({
-					url: "/pages/login/forget"
-				})
-			},
-			register() {
-				uni.navigateTo({
-					url: "/pages/login/register"
-				})
-			},
-			async login() {
-				if(!this.agree){
-					return toast("请先阅读同意隐私协议!");
-				}
-				if(!this.password || !this.username){
-					return toast("请输入账号或密码!");
-				}
-				if(!this.imgCode){
-					return toast("请输入图形验证码!");
-				}
-			}
-		}
-	}
+function loginForOther(type: string) {
+    switch (type) {
+        // 邮箱登录
+        case "email":
+            mode.value = "email"
+            break;
+        // 短信登录
+        case "sms":
+            mode.value = "sms";
+            break;
+        case "qqh5":
+            // #ifdef H5
+            window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx9b244ffaa2d01031&redirect_uri=${encodeURIComponent("https://i.ipink.pink/#/pages/login/third")}&response_type=code&scope=snsapi_base&state=wx_h5_login#wechat_redirect`
+            // #endif
+            break;
+        // 指纹登录
+        case "print":
+        // 一键登录
+        case "onekey":
+        // 微信小程序登录
+        case "mini":
+        // 微信APP登录
+        case "wx":
+        // 微信H5
+        case "wxh5":
+        // QQAPP登录
+        case "qq":
+        // 支付宝APP
+        case "ali":
+        case "apple":
+        default:
+            toast("暂未开放!");
+            break;
+    }
+}
+function forgot() {
+    uni.navigateTo({
+        url: "/pages/login/forget"
+    })
+}
+function register () {
+    uni.navigateTo({
+        url: "/pages/login/register"
+    })
+}
+
+function goProtocol (type: string) {
+    // uni.navigateTo({
+    // 	url: "/pages/user/server?type="+type
+    // })
+}
+
+function login() {
+    if(!agree.value){
+        return toast("请先阅读同意隐私协议!");
+    }
+    if(!password.value || !username.value){
+        return toast("请输入账号或密码!");
+    }
+    if(!imgCode.value){
+        return toast("请输入图形验证码!");
+    }
+}
+
+onLoad(async (options: any) => {
+    console.log(options)
+    changeImgCode();
+    uni.hideLoading();
+    back.value = options.back;
+    // #ifdef APP
+    const dev: IMEIType = await getIMEI_MAC();
+    IMEI.value = dev.IMEI || dev.deviceId;
+    let canUse = await checkCanUseOneKeyLogin();
+    showOnekeyLogin.value = canUse;
+    showFingerPrint.value = IMEI.value && userId.value ? true : false;
+    // #endif
+    rememberPassword.value = uni.getStorageSync("IsRememberPassword") || false;
+    const account = uni.getStorageSync("MyAccountInfo");
+    if(rememberPassword.value && account){
+        password.value = account.password;
+        username.value = account.username;
+    }
+})
 </script>
 
 <style lang="scss">

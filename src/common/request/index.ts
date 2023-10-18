@@ -8,7 +8,7 @@ import ApiMap, { ApiType } from "./api";
 import { ajax } from "./request";
 import {ApiExt, RequestParam} from "@/types";
 
-export type RequestFunc = (params: RequestParam, config: ApiExt) => Promise<Response>;
+export type RequestFunc = (params: RequestParam, config?: ApiExt) => Promise<Response>;
 
 export type RequestMap = {
     [ key: keyof ApiType]: RequestFunc
@@ -16,7 +16,7 @@ export type RequestMap = {
 
 const Request: RequestMap = {};
 Object.keys(ApiMap).forEach(item => {
-	Request[item] = (params: RequestParam, config: ApiExt) => ajax(ApiMap[item], params, config);
+	Request[item] = (params: RequestParam, config?: ApiExt) => ajax(ApiMap[item], params, config);
 });
 
 // 请求拦截器
