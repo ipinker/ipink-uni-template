@@ -1,18 +1,20 @@
 <template>
-    <button class="IButton" :class="IButtonClass" :style="IButtonStyle" ref="_ref" 
+    <button class="IButton" :class="IButtonClass" :style="IButtonStyle" ref="Button"
 		@mousedown="onMouseEvent" @mouseup="onMouseEvent"
 		@touchstart="onMouseEvent" @touchend="onMouseEvent"
 		@click="handlerClick"
 	>
+        <!-- useMargin 在需要通过props传入, 才能兼容全部端 -->
         <template v-if="isLoading">
-            <ILoading :class="defaultSlot ? 'IButtonIconMR8' : ''"/>
+            <ILoading :class="useMargin ? 'IButtonIconMR8 a1' : ''"/>
             <span class="IButtonLoadingMask"></span>
         </template>
         <template v-else>
-            <span class="iconfont" :class="[props.icon, defaultSlot ? 'IButtonIconMR8' : '']" v-if="props.icon"></span>
-            <slot name="icon" :class="[iconSlot&&defaultSlot ? 'IButtonIconMR8' : '']" v-else></slot>
+            <span :class="[icon, useMargin ? 'IButtonIconMR8' : '']" class="iconfont" v-if="icon"></span>
+            <!-- uniapp 编译会将button->uni-button margin需要自己在外部实现 -->
+            <slot :class="[useMargin ? 'IButtonIconMR8' : '']" v-else name="icon"></slot>
         </template>
-        <slot></slot>
+        <slot name="default"></slot>
     </button>
 </template>
 <script lang="ts">
@@ -21,7 +23,7 @@ export default {
 }
 </script>
 <script lang="ts" setup>
-import {ref, computed, useSlots, Ref} from "vue";
+import {ref, computed, useSlots, Ref, onMounted, nextTick, getCurrentInstance} from "vue";
 import { buttonProps } from "./button";
 import "./style";
 import ILoading from "@/components/ipink-loading/index";
@@ -42,20 +44,26 @@ import {
     useButtonTouch,
     useButtonMouse, TouchPoint
 } from "./useButton"
-import { isMobile } from "@/common/utils/is";
-
+// #ifdef H5
+import { isMobile } from "@/common/utils/isUtil";
+// #endif
+const ctx  = getCurrentInstance();
 const { theme } = useTheme();
 const props = defineProps(buttonProps);
 
 const emits = defineEmits(["click"]);
-const _ref: Ref<HTMLElement | null> = ref(null);
-
-// 获取插槽集合
-const slots = useSlots();
-// 这里获取到的是默认插槽的vnode
-const defaultSlot = slots.default && slots.default()[0];
-// 这里获取到的是图标插槽的vnode
-const iconSlot = slots.icon && slots.icon()[0];
+const Button = ref(null);
+let useMargin = ref(false);
+onMounted(async () => {
+    await nextTick();
+    // #ifndef H5
+    useMargin.value = props.iconMargin;
+    // #endif
+    // #ifdef H5
+    const slots = ctx?.proxy?.$slots?.default && ctx?.proxy?.$slots?.default() || [];
+    useMargin.value = useMargin.value || slots.length > 1
+    // #endif
+})
 
 // 生成button的class部分
 const IButtonClass = computed(() => {
@@ -116,7 +124,7 @@ const IButtonStyle = computed(() => {
 
 const isLoading = computed(() => props.loading);
 
-/* Mouse Event Block */ 
+/* Mouse Event Block */
 
 const handlerClick = (e: Event) => {
     if ( props.disabled || props.loading) return false;
@@ -132,20 +140,20 @@ const onMouseEvent = (event : MouseEvent | TouchEvent) => {
     let point: TouchPoint = { left: 0, top: 0};
     // 仅在pc上触发鼠标事件
     if(["mouseup", "mousedown"].includes(type) && isPcWeb){
-        point = useButtonMouse(event as MouseEvent, _ref, 1);
+        point = useButtonMouse(event as MouseEvent, Button, 1);
         xPos.value = point.left + "px";
         yPos.value = point.top + "px";
     }
     // 其他端仅触发touch事件
     if(["touchstart", "touchend"].includes(type) && !isPcWeb){
-        point = useButtonTouch(event as TouchEvent, _ref, 1);
+        point = useButtonTouch(event as TouchEvent, Button, 1);
         xPos.value = point.left + "px";
         yPos.value = point.top + "px";
     }
 }
 
 defineExpose({
-    _ref: _ref,
+    _ref: Button,
     handlerClick,
 });
 
@@ -154,6 +162,12 @@ defineExpose({
 <style lang="scss" scoped>
     @mixin ButtonShadow ($color: v-bind(shadowColor)) {
         box-shadow: 0 v-bind(boxShadowWidth) 0 if($color, $color, v-bind(shadowColor));
+    }
+
+    label,
+    span,
+    .IButtonIconMR8 {
+        margin-right: 6px !important;
     }
     // Button 对 button 的一些处理
     .IButton {
@@ -309,10 +323,6 @@ defineExpose({
                 line-height: 38px;
             }
         }
-
-        & > .IButtonIconMR8 {
-            margin-right: 6px !important;
-        }
         &,
         &.button-radius-,
         &.button-radius-default {
@@ -335,7 +345,7 @@ defineExpose({
         &.button-func-loading {
             opacity: 0.65;
         }
-		
+
 		&.button-animation-ripple {
 			overflow: hidden;
 			&::before {

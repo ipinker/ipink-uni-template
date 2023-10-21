@@ -1,6 +1,6 @@
 <template>
     <view class="PageContainer">
-        <slot />
+        <slot name="default"/>
         <view class="i-theme-change iconfont" :class="currentThemeName" @click="changeTheme"/>
         <view class="i-theme-change i-lang-change " @click="changeLocale">{{ currentLocaleName }}</view>
     </view>

@@ -18,21 +18,28 @@
 				<view class="login-item">
 					<view class="login-item-label">验证码 </view>
 					<input class="login-item-con" placeholder="请输入验证码" v-model="imgCode" />
-				    <view class="login-item-sign" @click="changeImgCode"> <img :src="codeImg" alt=""> </view>
+				    <view class="login-item-sign" @click="changeImgCode"> <image :src="codeImg" alt=""/> </view>
 				</view>
 				<view class="rememberPassword">
 					<i-check v-model="rememberPassword" @change="rememberPasswordChange">记住密码</i-check>
+				</view>
+				<view class="rememberPassword">
+                    <i-radiobox v-model="test">
+                        <i-radio label="1">11</i-radio>
+                        <i-radio label="0">11</i-radio>
+                    </i-radiobox>
+                    {{test}}
 				</view>
 			</block>
 			<block v-if="mode == 'email'">
 				<view class="login-item">
 					<view class="login-item-label">邮箱</view>
-					<input class="login-item-con" placeholder="请输入邮箱" v-model=" email"/>
+					<input class="login-item-con" placeholder="请输入邮箱" v-model="email"/>
 				</view>
 				<view class="login-item">
 					<view class="login-item-label">验证码 </view>
 					<input class="login-item-con" placeholder="请输入验证码"  v-model="code" />
-				    <view class="login-item-sign smscode" :class="{'active-light': currentCodeSecond==0}" @click="sendEmailCode()">{{sendText}}</view>
+				    <view class="login-item-sign smscode" :class="[{'active-light': currentCodeSecond==0}]" @click="sendEmailCode()">{{sendText}}</view>
 				</view>
 			</block>
 			<block v-if="mode == 'sms'">
@@ -92,7 +99,7 @@
 			<!-- #endif -->
 		</view>
 		<view class="login-one-key abs-bottom" v-if="showOnekeyLogin">
-			<i-button @click="loginForOther('onekey')" classes="primary big">一键登录</i-button>
+<!--			<i-button @click="loginForOther('onekey')" classes="primary big">一键登录</i-button>-->
 		</view>
 	</i-page>
 </template>
@@ -104,7 +111,8 @@ import {
 } from "@/common/utils/login";
 import R from "@/common/request";
 import { genUuid } from "@/common/utils/gen"
-import {isEmail, isPhone} from "@/common/utils/is"
+
+import {isEmail, isPhone} from "@/common/utils/isUtil"
 // #ifdef APP
 import { getIMEI_MAC } from "@/common/utils/get"
 // #endif
@@ -117,6 +125,7 @@ import {IMEIType} from "@/types";
 const userStore = useUserStore();
 const { theme } = useTheme();
 
+let test = ref('0')
 let userId: ComputedRef<string> = computed(() => userStore.userId);
 let uuid: string  = genUuid();
 let password: Ref<string> = ref("");
@@ -326,7 +335,7 @@ onLoad(async (options: any) => {
 			display: flex;
 		}
 		.login-item-sign {
-            img {
+            image {
                 max-width: 220rpx;
                 max-height: 80rpx;
             }

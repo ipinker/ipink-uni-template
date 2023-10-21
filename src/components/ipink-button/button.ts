@@ -143,6 +143,7 @@ export const buttonProps = {
      * @description 按钮激活样式类
      */
     activeClass: String,
+    iconMargin: Boolean
 
 } as const;
 

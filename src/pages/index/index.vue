@@ -58,16 +58,5 @@ const goDetail = (child: ComponentItem, parent: ComponentsItem) => {
     }
 }
 
-.flex {
-    padding: 0 20rpx;
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-
-    & > :nth-child(n) {
-        margin: 10rpx 20rpx;
-    }
-
-}
 
 </style>
