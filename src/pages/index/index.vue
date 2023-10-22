@@ -22,6 +22,8 @@
                 </view>
             </view>
         </view>
+
+        <i-button type="primary" size="big" plain style="margin: 50rpx auto" @click="login">Sign in</i-button>
     </i-page>
 </template>
 
@@ -39,6 +41,12 @@ const goDetail = (child: ComponentItem, parent: ComponentsItem) => {
     console.log(url)
     uni.navigateTo({
         url
+    })
+}
+
+const login = () => {
+    uni.navigateTo({
+        url: "/pages/login/index"
     })
 }
 </script>

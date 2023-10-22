@@ -1,5 +1,7 @@
 # Vue3 + Pinia + Theme + i18n 移动版模版
 
+## 演示地址
+[`点击直达`](https://i.ipink.pink/app/#/)
 
 ## Common
 #### Common.Util 目录
