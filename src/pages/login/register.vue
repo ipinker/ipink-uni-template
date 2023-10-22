@@ -1,6 +1,6 @@
 <template>
     <view>
-        11
+        Sign Up
     </view>
 </template>
 

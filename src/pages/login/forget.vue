@@ -1,6 +1,6 @@
 <template>
     <view>
-        11
+        Forget Account Password
     </view>
 </template>
 
