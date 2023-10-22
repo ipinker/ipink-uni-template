@@ -117,7 +117,7 @@ import {IMEIType} from "@/types";
 
 const userStore = useUserStore();
 const { theme } = useTheme();
-
+console.log(theme)
 const containerBg = computed(() => theme.value?.colorBgContainer);
 const linkColor = computed(() => theme.value?.colorLink);
 const borderColor = computed(() => theme.value?.colorBorderSecondary);
