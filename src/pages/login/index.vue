@@ -9,47 +9,40 @@
 			<block v-if="mode == 'password'">
 				<view class="login-item">
 					<view class="login-item-label">账号</view>
-					<input class="login-item-con" placeholder="请输入账号/手机号/邮箱" v-model="username"/>
+					<input class="login-item-con" :placeholder-style="placeholderStyle" placeholder="请输入账号/手机号/邮箱" v-model="username"/>
 				</view>
 				<view class="login-item">
 					<view class="login-item-label">密码</view>
-					<input class="login-item-con" placeholder="请输入密码" password v-model="password" />
+					<input class="login-item-con" :placeholder-style="placeholderStyle" placeholder="请输入密码" password v-model="password" />
 				</view>
 				<view class="login-item">
 					<view class="login-item-label">验证码 </view>
-					<input class="login-item-con" placeholder="请输入验证码" v-model="imgCode" />
+					<input class="login-item-con" :placeholder-style="placeholderStyle" placeholder="请输入验证码" v-model="imgCode" />
 				    <view class="login-item-sign" @click="changeImgCode"> <image :src="codeImg" alt=""/> </view>
 				</view>
 				<view class="rememberPassword">
 					<i-check v-model="rememberPassword" @change="rememberPasswordChange">记住密码</i-check>
 				</view>
-				<view class="rememberPassword">
-                    <i-radiobox v-model="test">
-                        <i-radio label="1">11</i-radio>
-                        <i-radio label="0">11</i-radio>
-                    </i-radiobox>
-                    {{test}}
-				</view>
 			</block>
 			<block v-if="mode == 'email'">
 				<view class="login-item">
 					<view class="login-item-label">邮箱</view>
-					<input class="login-item-con" placeholder="请输入邮箱" v-model="email"/>
+					<input class="login-item-con" :placeholder-style="placeholderStyle" placeholder="请输入邮箱" v-model="email"/>
 				</view>
 				<view class="login-item">
 					<view class="login-item-label">验证码 </view>
-					<input class="login-item-con" placeholder="请输入验证码"  v-model="code" />
+					<input class="login-item-con" :placeholder-style="placeholderStyle" placeholder="请输入验证码"  v-model="code" />
 				    <view class="login-item-sign smscode" :class="[{'active-light': currentCodeSecond==0}]" @click="sendEmailCode()">{{sendText}}</view>
 				</view>
 			</block>
 			<block v-if="mode == 'sms'">
 				<view class="login-item">
 					<view class="login-item-label">手机号</view>
-					<input class="login-item-con" placeholder="请输入手机号" v-model="phone"/>
+					<input class="login-item-con" :placeholder-style="placeholderStyle" placeholder="请输入手机号" v-model="phone"/>
 				</view>
 				<view class="login-item" >
 					<view class="login-item-label">验证码 </view>
-					<input class="login-item-con" placeholder="请输入验证码"  v-model="code" />
+					<input class="login-item-con" :placeholder-style="placeholderStyle" placeholder="请输入验证码"  v-model="code" />
 				    <view class="login-item-sign smscode" :class="{'active-light': currentCodeSecond==0}" @click="sendEmailCode('SendSMSCode')">{{sendText}}</view>
 				</view>
 			</block>
@@ -64,17 +57,17 @@
 			<i-button @click="login" type="primary">登录</i-button>
 		</view>
 
-		<view class="forget abs-bottom" @click="forgot">
+		<view class="forget abs-bottom forget_register_pub" @click="forgot">
 			<text class="iconfont icon-xiangzuo1"></text>
 			<text>忘记密码</text>
 		</view>
 
-		<view class="register abs-bottom" @click="register" >
+		<view class="register abs-bottom forget_register_pub" @click="register" >
 			<text>前往注册</text>
 			<text class="iconfont icon-xiangyou"></text>
 		</view>
 
-		<view class="login-other abs-bottom">
+		<view class="login-other abs-bottom ">
 			<!-- #ifdef APP -->
 			<image @click="loginForOther('qq')" src="../../static/img/QQ.png" />
 			<image @click="loginForOther('sms')" src="../../static/img/sms.png" />
@@ -125,6 +118,16 @@ import {IMEIType} from "@/types";
 const userStore = useUserStore();
 const { theme } = useTheme();
 
+const containerBg = computed(() => theme.value?.colorBgContainer);
+const linkColor = computed(() => theme.value?.colorLink);
+const borderColor = computed(() => theme.value?.colorBorderSecondary);
+const pageBg = computed(() => theme.value?.colorPrimaryBg);
+const labelColor = computed(() => theme.value?.colorGrayText);
+const contentColor = computed(() => theme.value?.colorText)
+const placeholderColor = computed(() => theme.value?.colorPlaceholderText);
+const placeholderStyle = computed(() => `color: ${placeholderColor.value}`);
+const primaryColor = computed(() => theme.value.colorPrimaryText)
+
 let test = ref('0')
 let userId: ComputedRef<string> = computed(() => userStore.userId);
 let uuid: string  = genUuid();
@@ -138,7 +141,6 @@ let rememberPassword: Ref<boolean> = ref(true);
 let agree: Ref<boolean> = ref(false); // 必须为false, 不然上架会被驳回
 let showOnekeyLogin: Ref<boolean> = ref(false); // 显示 uniapp  APP 一键登录
 let showFingerPrint: Ref<boolean> = ref(false); // 显示指纹登录
-
 let IMEI: Ref<string> = ref(""); // 用来指纹登录的设备ID
 // 登录模式
 let mode: Ref<string> = ref("password");
@@ -150,7 +152,7 @@ let code:Ref<string> = ref(""); // 验证码有效期: 60 * 60 s
 let codeExpire: Ref<number> = ref( 1000 * 60 * 30);
 let isSend: Ref<number> = ref(0); // 0: 未发送, 1: 已发送, 2: 发送失败, 3: 重新发送验证码,
 let currentCodeSecond: Ref<number> = ref(0);
-let timeId: Ref<any>;
+let timeId: Ref<any> = ref(null);
 
 const sendText = computed(() => {
     let status = "发送验证码";
@@ -281,6 +283,7 @@ onLoad(async (options: any) => {
 .page {
 	max-width: 750rpx;
 	overflow: hidden;
+    background-color: v-bind(pageBg)
 }
 .login {
 	position:absolute;
@@ -294,6 +297,7 @@ onLoad(async (options: any) => {
 	padding: 30rpx;
 	box-sizing: border-box;
 	@include center(column);
+    background-color: v-bind(containerBg);
 	.rememberPassword {
 		width: 100%;
 		line-height: 60rpx;
@@ -302,7 +306,7 @@ onLoad(async (options: any) => {
 		width: 100%;
 		line-height: 60rpx;
 		text {
-
+            color: v-bind(linkColor);
 		}
 	}
 	.changeLoginMode {
@@ -313,6 +317,7 @@ onLoad(async (options: any) => {
 		margin-bottom: 20rpx;
 		border-radius: 12rpx;
 		margin-left: calc(100% - 200rpx);
+        color: v-bind(primaryColor);
 		.icon-shujuzhuanhuan {
 			margin-right: 10rpx;
 		}
@@ -322,10 +327,12 @@ onLoad(async (options: any) => {
 		height: 100rpx;
 		@include center;
 		margin-bottom: 20rpx;
+        border-bottom: 1px solid v-bind(borderColor);
 		.login-item-label {
 			width: 150rpx;
 			height: 80rpx;
 			line-height: 80rpx;
+            color: v-bind(labelColor);
 		}
 		.login-item-con {
 			flex: 1;
@@ -333,8 +340,10 @@ onLoad(async (options: any) => {
 			height: 80rpx;
 			line-height: 80rpx;
 			display: flex;
+            color: v-bind(contentColor);
 		}
 		.login-item-sign {
+            color: v-bind(primaryColor);
             image {
                 max-width: 220rpx;
                 max-height: 80rpx;
@@ -348,17 +357,17 @@ onLoad(async (options: any) => {
 		}
 	}
 }
-.forget {
+.forget_register_pub {
 	position: fixed;
-	left: 30rpx;
 	bottom: 0;
 	line-height: 100rpx;
+    color: v-bind(linkColor);
+}
+.forget {
+	left: 30rpx;
 }
 .register {
-	position: fixed;
 	right: 30rpx;
-	bottom: 0;
-	line-height: 100rpx;
 }
 .login-other {
 	position: absolute;

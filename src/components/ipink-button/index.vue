@@ -73,7 +73,7 @@ const IButtonClass = computed(() => {
         ...genButtonRadiusClass(props.radius),
         ...genButtonSizeClass(props),
         ...genButtonTypeClass(props)
-    ];
+    ].filter(cls => cls);
 });
 
 
@@ -119,8 +119,9 @@ const IButtonStyle = computed(() => {
         props.bg ? {
            "box-shadow" : `0 ${boxShadowWidth.value} 0 ${new TinyColor(props.bg).setAlpha(0.1).toRgbString()}`
         } : {}
-    ];
+    ].filter(sty => sty && Object.keys(sty).length);
 });
+console.log(IButtonClass, IButtonStyle)
 
 const isLoading = computed(() => props.loading);
 

@@ -65,8 +65,9 @@
     import { useTheme } from "@/common/hooks/useTheme";
 
     const { theme } = useTheme();
-    const navigateBgColor = computed(() => theme.value?.colorBgContainer);
-    const navigateColor = computed(() => theme.value?.colorTextBase);
+    const navigateBgColor = computed(() => theme.value?.colorNavigateBar);
+    const navigateStatusBgColor = computed(() => theme.value?.colorStatusBar)
+    const navigateColor = computed(() => theme.value?.colorNavigateBarText);
     const shadowColor = computed(() => theme.value?.colorShadowBase);
     const props = defineProps({
         type: { // color  image  custom
@@ -186,6 +187,7 @@
 		box-sizing: border-box;
         .pink-statusbar {
 			width: 100%;
+            background-color: v-bind(navigateStatusBgColor);
 		}
         .pink-navigation_c  {
             position: relative;

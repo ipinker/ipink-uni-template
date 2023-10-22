@@ -20,7 +20,7 @@ const props = defineProps({
         type: Boolean,
         default: false
     },
-    value: {
+    modelValue: {
         type: Boolean,
         default: false
     },
@@ -29,13 +29,10 @@ const props = defineProps({
 
 let checked = ref(false);
 const { theme } = useTheme();
-let primaryColor = computed(() => theme.value?.colorPrimaryText)
+let primaryColor = computed(() => theme.value?.colorPrimaryText);
+let unActiveColor = computed(() => theme.value?.colorInfoText);
 
-onMounted(() => {
-
-});
-
-const emits = defineEmits(['update:check', 'input', 'change']);
+const emits = defineEmits(['update:modelValue', 'change']);
 
 
 watch(() => props.check, (newVal) => {
@@ -43,7 +40,7 @@ watch(() => props.check, (newVal) => {
         checked.value = newVal;
     }
 }, { immediate: true })
-watch(() => props.value, (newVal) => {
+watch(() => props.modelValue, (newVal) => {
     if(newVal !== void 0){
         checked.value = newVal;
     }
@@ -52,10 +49,9 @@ watch(() => props.value, (newVal) => {
 const change = () => {
     const result = !checked.value;
     emits("change", result);
-    emits("input", result);
-    emits("update:check", result);
+    emits("update:modelValue", result);
 }
-
+console.log()
 </script>
 <style lang="scss">
 	.pink-checked {
@@ -66,7 +62,10 @@ const change = () => {
 			margin-right: 10rpx;
 			font-size: 32rpx;
 			transition: all .3s;
-            color: v-bind(primaryColor);
+            color: v-bind(unActiveColor);
+            &.icon-duoxuan-xuanzhong {
+                color: v-bind(primaryColor);
+            }
 		}
 		.pink-checked-label {
 			display: inline-block;

@@ -15,5 +15,7 @@ onLaunch(() => {
 <style lang="scss">
 @import "@/static/css/index.scss";
 
-
+page {
+    font-size: 30rpx;
+}
 </style>

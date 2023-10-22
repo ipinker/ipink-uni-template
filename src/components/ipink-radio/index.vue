@@ -1,5 +1,5 @@
 <template>
-	<view class="PinkRadio" @click="change($parent)" ref="PinkRadio">
+	<view class="PinkRadio" @click="change" ref="PinkRadio">
 		<view class="iconfont pink-radio-icon"
 			:class="radio?'icon-xuanzhong':'icon-weixuanzhong'"
 		></view>
@@ -28,7 +28,9 @@ const PinkRadio = ref(null);
 let radio = ref(false);
 let currentLabel: Ref<boolean | string | number> = ref(false);
 const { theme } = useTheme()
-const primaryColor = computed((() => theme.value?.colorPrimaryText))
+const primaryColor = computed((() => theme.value?.colorPrimaryText));
+let unActiveColor = computed(() => theme.value?.colorInfoText);
+
 watch(() => props.modelValue, (newVal) => {
     if(newVal !== void 0){
         radio.value = newVal === props.label;
@@ -90,6 +92,7 @@ defineExpose({
 			margin-right: 10rpx;
 			font-size: 32rpx;
 			transition: all .3s;
+            color: v-bind(unActiveColor);
             &.icon-xuanzhong {
                 color: v-bind(primaryColor)
             }

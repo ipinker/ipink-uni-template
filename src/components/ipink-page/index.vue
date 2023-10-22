@@ -38,7 +38,7 @@ page,
 .i-theme-change {
     position: fixed;
     right: 50rpx;
-    bottom: 50rpx;
+    bottom: 80rpx;
     z-index: 999;
     background-color:v-bind(primaryBgColor);
     color: v-bind(whiteColor);
@@ -53,7 +53,7 @@ page,
 }
 
 .i-lang-change {
-    bottom: 150rpx;
+    bottom: 180rpx;
     padding: 0 20rpx;
     word-break: break-all;
     overflow: hidden;
