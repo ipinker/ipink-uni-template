@@ -20,7 +20,7 @@ export const useTheme = () => {
 
             _theme.colorGrayText = _theme.gray5;
             _theme.colorBlackgrayText = _theme.gray8;
-            _theme.colorPlaceholderText = _theme.gray1;
+            _theme.colorPlaceholderText = _theme.gray4;
             _theme.colorDisabledText = _theme.gray1;
             _theme.colorNavigateBarText = _theme.colorText;
         }

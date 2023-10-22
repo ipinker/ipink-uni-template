@@ -265,6 +265,7 @@ defineExpose({
             height: 40px;
             padding: 0 15px;
             line-height: 40px;
+            width: 240px;
             &,
             .iconfont {
                 font-size: 16px;

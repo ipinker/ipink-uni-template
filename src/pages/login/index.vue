@@ -54,7 +54,7 @@
 			</view>
 
 			<i-space height="40"/>
-			<i-button @click="login" type="primary">登录</i-button>
+			<i-button @click="login" size="big" type="primary">登录</i-button>
 		</view>
 
 		<view class="forget abs-bottom forget_register_pub" @click="forgot">
@@ -283,7 +283,8 @@ onLoad(async (options: any) => {
 .page {
 	max-width: 750rpx;
 	overflow: hidden;
-    background-color: v-bind(pageBg)
+    background-color: v-bind(pageBg);
+
 }
 .login {
 	position:absolute;

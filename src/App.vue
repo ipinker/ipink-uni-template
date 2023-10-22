@@ -8,6 +8,12 @@
 -->
 <script setup lang="ts">
 import { onLaunch } from "@dcloudio/uni-app";
+import {useTheme} from "@/common/hooks/useTheme";
+import {computed} from "vue";
+const { theme } = useTheme();
+
+const textBaseColor = computed(() => theme.value?.colorTextBase);
+
 onLaunch(() => {
     console.log("onLaunch")
 })
@@ -17,5 +23,6 @@ onLaunch(() => {
 
 page {
     font-size: 30rpx;
+    color: v-bind(textBaseColor);
 }
 </style>
