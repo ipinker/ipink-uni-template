@@ -10,7 +10,7 @@ declare module '*.vue' {
   export default component
 }
 
-declare module "@vue/runtime-core" {
+declare module "vue" {
   interface ComponentCustomProperties {
     $system: UniApp.GetSystemInfoResult;
     $tr: any;
